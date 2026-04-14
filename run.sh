@@ -11,24 +11,25 @@ problem=$(printf "%02d" "$2")
 assignment_path="assignment-${assignment}/PR-${problem}"
 main_file="${assignment_path}/main.c"
 input_file="${assignment_path}/input.txt"
-test_file="${assignment_path}/test.c"
+test_file="${assignment_path}/output.txt"
+
+problem_binary="AS-${assignment}-PR-${problem}"
+stats_file="stats.tmp"
 
 # check if required file exists
-if [ ! -f "$main_file" ]; then
-    echo "Error: $main_file not found"
-    exit 1
-fi
-
-if [ ! -f "$input_file" ]; then
-    echo "Error: $input_file not found"
-    exit 1
-fi
-
-if [ ! -f "$test_file" ]; then
-    echo "Error: $test_file not found"
-    exit 1
-fi
+for f in "$main_file" "$input_file" "$test_file"; do 
+    if [ ! -f "$f" ]; then
+        echo "[SCRIPT] Error: $f not found"
+        exit 1
+    fi
+done
 
 # compile and run
-gcc -pipe -o2 -std=c11 -o "AS-${assignment}-PR-${problem}" "$main_file" -lm && ./"AS-${assignment}-PR-${problem}"
+echo "[SCRIPT] Compiling..."
+gcc -pipe -o2 -std=c11 -o "$problem_binary" "$main_file" -lm || exit 1
+
+echo "[SCRIPT] Running tests..."
+echo
+
+./"$problem_binary" "$input_file" "$test_file"
 
