@@ -14,15 +14,40 @@ typedef struct Node{
 
 
 
-int solve(Node *root){
+int solve_brute_force(Node *root){
     if(!root) return 0;
     if(root->children_count == 0) return 1;
     int height = 0;
     for(int i=0; i<root->children_count; i++){
-        int child_height = solve(root->children[i]);
+        int child_height = solve_brute_force(root->children[i]);
         height = height > child_height?height:child_height;
     }
     return height + 1;
+}
+
+int solve_dp(int *parents_arr, int num_nodes){
+    int max_height = 0;
+    int *heights = (int *)calloc(num_nodes, sizeof(int));
+    int loop_count = 0;
+    for(int i=0; i<num_nodes; i++){
+        loop_count++;
+        int curr_height = 0;
+        int j = i;
+        while(j != -1 && heights[j] == 0){
+            j = parents_arr[j];
+            curr_height++;
+            loop_count++;
+        }
+
+        if(j != -1) curr_height += heights[j];
+        heights[i] = curr_height;
+        if(heights[parents_arr[i]] == 0){
+            heights[parents_arr[i]] = curr_height-1;
+        }
+        max_height = max_height>curr_height?max_height:curr_height;
+    }
+    printf("loop count: %d\n", loop_count);
+    return max_height;
 }
 
 
@@ -111,7 +136,8 @@ void parse_input_from_file(FILE *input_file, int num_line){
 
     printf("\n");
 
-    int result = solve(root_node);
+    // int result = solve_brute_force(root_node);
+    int result = solve_dp(nodes, num_node);
     printf("Inputs: %s", input_line);
     printf("Outputs: %d\n", result);
     for (int i = 0; i < num_node; i++) {
