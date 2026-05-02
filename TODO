@@ -1,13 +1,13 @@
 # Project TODO — C Problem Solving Framework
 
 ## 🧱 Core Architecture
-- [ ] Finalize clean separation:
+- [x] Finalize clean separation:
   - `driver.c` (framework)
   - `problem.c` (input + output print)
   - `solver.c` (algorithm only)
   - `judge.c` (expected output + compare)
-- [ ] Standardize headers (`problem.h`, `solver.h`, `judge.h`, `problem_types.h`)
-- [ ] Create a reusable folder template for new problems
+- [x] Standardize headers (`problem.h`, `solver.h`, `judge.h`, `problem_types.h`)
+- [x] Create a reusable folder template for new problems
 
 ---
 
@@ -52,8 +52,8 @@ All generic via `void*` + macros.
 ---
 
 ## 🗂️ Project Structure
-- [ ] Move reusable framework to `/framework`
-- [ ] Keep problems under `/problems/AS-XX-PR-YY`
+- [x] Move reusable framework to `/framework`
+- [x] Keep problems under `/problems/AS-XX-PR-YY`
 - [ ] Common Makefile
 - [ ] Problem template generator script
 
