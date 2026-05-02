@@ -1,0 +1,84 @@
+# Project TODO — C Problem Solving Framework
+
+## 🧱 Core Architecture
+- [ ] Finalize clean separation:
+  - `driver.c` (framework)
+  - `problem.c` (input + output print)
+  - `solver.c` (algorithm only)
+  - `judge.c` (expected output + compare)
+- [ ] Standardize headers (`problem.h`, `solver.h`, `judge.h`, `problem_types.h`)
+- [ ] Create a reusable folder template for new problems
+
+---
+
+## 🪵 Logging System (`log.c`)
+- [ ] Add log levels: INFO, DEBUG, WARN, ERROR
+- [ ] Enable/disable debug logs via macro/flag
+- [ ] Add timestamp to logs
+- [ ] Color + non-color mode (for file redirection)
+
+---
+
+## ⏱️ Performance Metrics
+- [ ] Measure execution time per test case
+- [ ] Measure memory usage per test case
+- [ ] Print stats after each test
+- [ ] Optional: summary table after all tests
+
+---
+
+## 🧪 Judge Improvements
+- [ ] Show clear PASS / FAIL
+- [ ] Show diff when output mismatches
+- [ ] Count total passed / failed tests
+- [ ] Option to stop on first failure
+
+---
+
+## 📦 Mini C Collection Framework (Big TODO)
+Implement reusable data structures:
+
+- [ ] Dynamic Array (vector)
+- [ ] Stack
+- [ ] Queue
+- [ ] Linked List
+- [ ] Hash Map
+- [ ] Set
+- [ ] Tree helpers
+- [ ] Graph helpers (adj list)
+
+All generic via `void*` + macros.
+
+---
+
+## 🗂️ Project Structure
+- [ ] Move reusable framework to `/framework`
+- [ ] Keep problems under `/problems/AS-XX-PR-YY`
+- [ ] Common Makefile
+- [ ] Problem template generator script
+
+---
+
+## 🛠️ Build System
+- [ ] Write Makefile
+- [ ] Targets: build, run, clean
+- [ ] Auto compile all `.c` files
+- [ ] Debug and release modes
+
+---
+
+## 🧩 Problem Authoring Experience
+Goal: for a new problem, only write:
+
+- `parse_input`
+- `solve`
+
+Everything else handled by framework.
+
+---
+
+## 🧠 Future Enhancements
+- [ ] Auto-generate Graphviz tree/graph if needed
+- [ ] Test case random generator
+- [ ] Benchmark multiple solutions for same problem
+- [ ] CLI flags (verbose, debug, timing)
