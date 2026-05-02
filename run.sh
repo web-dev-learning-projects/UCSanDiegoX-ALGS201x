@@ -8,16 +8,17 @@ fi
 assignment=$(printf "%02d" "$1")
 problem=$(printf "%02d" "$2")
 
-assignment_path="assignment-${assignment}/PR-${problem}"
-main_file="${assignment_path}/main.c"
-input_file="${assignment_path}/input.txt"
-test_file="${assignment_path}/output.txt"
+problem_dir="assignment-${assignment}/PR-${problem}"
+input_file="${problem_dir}/input.txt"
+test_file="${problem_dir}/output.txt"
 
-problem_binary="AS-${assignment}-PR-${problem}"
+problem_binary="tmp/bin/AS-${assignment}-PR-${problem}"
 stats_file="stats.tmp"
 
 # check if required file exists
-for f in "$main_file" "$input_file" "$test_file"; do 
+for f in  "$input_file" "$test_file" \
+          "${problem_dir}/problem.c" \
+          "${problem_dir}/solver.c"; do 
     if [ ! -f "$f" ]; then
         echo "[SCRIPT] Error: $f not found"
         exit 1
@@ -26,7 +27,15 @@ done
 
 # compile and run
 echo "[SCRIPT] Compiling..."
-gcc -pipe -o2 -std=c11 -o "$problem_binary" "$main_file" -lm || exit 1
+gcc -std=c11 -Wall -Wextra -pipe -o2 \
+    framework/driver.c \
+    "${problem_dir}/problem.c" \
+    "${problem_dir}/solver.c" \
+    utils/log.c \
+    -Iframework \
+    -Iutils \
+    -I"${problem_dir}" \
+    -o "$problem_binary" -lm || exit 1
 
 echo "[SCRIPT] Running tests..."
 echo
