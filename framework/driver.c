@@ -3,63 +3,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../log.h"
+#include <stdint.h>
 
-void solve(const char *input_string, char *result){
-    int len = strlen(input_string);
-    char *stack = (char *)malloc(sizeof(char)*len);
-    int idx = -1;
-    for(int i=0; input_string[i] != '\0'; i++){
-        if(input_string[i] == '(' || input_string[i] == '[' || input_string[i] == '{'){
-            stack[++idx] = i;
-        }
-        else if(input_string[i] == ')' || input_string[i] == ']' || input_string[i] == '}'){
-            if (idx < 0) {
-                sprintf(result, "%d", i + 1);
-                free(stack);
-                return;
-            }
-            if((input_string[i] == ')' && input_string[stack[idx]] == '(') 
-                ||(input_string[i] == '}' && input_string[stack[idx]] == '{') 
-                ||(input_string[i] == ']' && input_string[stack[idx]] == '[')){
-                    idx--;
-            }
-            else{
-                sprintf(result, "%d", i+1);
-                return;
-            }
-        }
-    }
-    if(idx != -1){
-        sprintf(result, "%d", stack[idx]+1);
-        return;
-    }
-    sprintf(result, "%s", "Success");
-    return;
-}
+#include "framework.h"
+#include "../utils/log.h"
 
 void usage_msg(const char *program_name){
     log_with_color(RED, "Usages: ");
     log_with_color(RESET, "%s <input.txt> <output.txt>\n", program_name);
     exit(-1);
 }
-
-void parse_input_from_file(FILE *input_file){
-    char *string = NULL;
-    size_t len = 0;
-    if(getline(&string, &len, input_file) == -1){
-        log_with_color(RED, "ERROR: Could not parse the input file properly\n");
-        exit(-1);
-    }
-    char *result = malloc(sizeof(char)*100);
-    solve(string, result);
-    printf("%s", string);
-    printf("%s\n", result);
-    free(string);
-    free(result);
-}
-
-
 
 int main(int argc, char **argv){
     (void)argc;
@@ -68,7 +21,7 @@ int main(int argc, char **argv){
 
     const char *program = *argv++;
     int assignment_number, problem_number;
-    if(sscanf(program, "./AS-%2d-PR-%2d", &assignment_number, &problem_number) != 2){
+    if(sscanf(program, "./tmp/bin/AS-%2d-PR-%2d", &assignment_number, &problem_number) != 2){
         log_with_color(RED, "ERROR: could not parse the program name correctly: %s\n", program);
         exit(-1);
     }
@@ -111,7 +64,39 @@ int main(int argc, char **argv){
     log_with_color(LIGHT_BLUE, "INFO: Total Test Cases: %d\n", problem_count);
 
     for(int i=0; i<problem_count; i++){
-        parse_input_from_file(input_file);
+        printf(" Running Test: %02d\n", i+1);
+        
+        Input *input = create_input();
+        Output *output = create_output();
+        Output *output_expected = create_output();
+        
+        parse_input(input_file, input);
+        
+        printf("Inputs: \n");
+        print_input(input);
+        
+        solve(input, output);
+        
+        printf("Outputs: \n");
+        print_output(output);
+        
+        
+        parse_expected_output(output_file, output_expected);
+        int result = compare_output(output, output_expected);
+        
+        printf("Outputs Expected: \n");
+        print_output(output_expected);
+
+        if(result){
+            printf("Test Passed\n");
+        }else{
+            printf("Test Failed\n");
+        }
+
+        // free memory
+        free_input(input);
+        free_output(output);
+        printf("\n");
     }
 
     fclose(output_file);

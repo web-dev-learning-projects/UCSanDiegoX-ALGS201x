@@ -1,3 +1,6 @@
+#ifndef LOG_H
+#define LOG_H
+
 #include <stdio.h>
 #include <stdarg.h>
 
@@ -23,11 +26,6 @@
 #define  LIGHT_CYAN     "\033[0;96m"
 #define  RESET          "\033[0m"
 
-void log_with_color(const char *color, const char *statement, ...){
-    va_list args;
-    va_start(args, statement);
-    printf("%s", color);
-    vprintf(statement, args);
-    printf("%s", RESET);
-    va_end(args);
-}
+void log_with_color(const char *color, const char *statement, ...);
+
+#endif
