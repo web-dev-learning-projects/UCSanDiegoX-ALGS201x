@@ -58,7 +58,7 @@ int main(int argc, char **argv){
     }
     
     int result_count = 0;
-    fscanf(output_file, "%d\n", &result_count);
+    fscanf(output_file, "%d", &result_count);
     assert(problem_count==result_count);
 
     log_with_color(LIGHT_BLUE, "INFO: Total Test Cases: %d\n", problem_count);
