@@ -41,8 +41,12 @@ int main(int argc, char **argv){
         exit(-1);
     }
     
+    char *line = NULL;
+    size_t len = 0;
+    
     int problem_count = 0;
-    fscanf(input_file, "%d\n", &problem_count);
+    getline(&line, &len, input_file);
+    problem_count = atoi(line);
     
     if(*argv == NULL) usage_msg(program);
     
@@ -58,9 +62,11 @@ int main(int argc, char **argv){
     }
     
     int result_count = 0;
-    fscanf(output_file, "%d", &result_count);
+    getline(&line, &len, output_file);
+    result_count = atoi(line);
     assert(problem_count==result_count);
-
+    free(line);
+    
     log_with_color(LIGHT_BLUE, "INFO: Total Test Cases: %d\n", problem_count);
 
     for(int i=0; i<problem_count; i++){
