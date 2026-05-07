@@ -41,8 +41,12 @@ int main(int argc, char **argv){
         exit(-1);
     }
     
+    char *line = NULL;
+    size_t len = 0;
+    
     int problem_count = 0;
-    fscanf(input_file, "%d\n", &problem_count);
+    getline(&line, &len, input_file);
+    problem_count = atoi(line);
     
     if(*argv == NULL) usage_msg(program);
     
@@ -58,11 +62,13 @@ int main(int argc, char **argv){
     }
     
     int result_count = 0;
-    fscanf(output_file, "%d\n", &result_count);
+    getline(&line, &len, output_file);
+    result_count = atoi(line);
     assert(problem_count==result_count);
-
+    free(line);
+    
     log_with_color(LIGHT_BLUE, "INFO: Total Test Cases: %d\n", problem_count);
-
+    int passed_test_cases=0, fail_test_cases=0;
     for(int i=0; i<problem_count; i++){
         printf(" Running Test: %02d\n", i+1);
         
@@ -88,9 +94,11 @@ int main(int argc, char **argv){
         print_output(output_expected);
 
         if(result){
-            printf("Test Passed\n");
+            passed_test_cases++;
+            log_with_color(GREEN, "Test Passed\n");
         }else{
-            printf("Test Failed\n");
+            fail_test_cases++;
+            log_with_color(RED, "Test Failed\n");
         }
 
         // free memory
@@ -98,6 +106,9 @@ int main(int argc, char **argv){
         free_output(output);
         printf("\n");
     }
+
+    log_with_color(GREEN, "Passed Test cases: %d\n", passed_test_cases);
+    log_with_color(RED, "Failed Test cases: %d\n", fail_test_cases);
 
     fclose(output_file);
     fclose(input_file);
