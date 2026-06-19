@@ -1,6 +1,14 @@
 #!/bin/bash
 
-if [ $# -ne 2 ]; then
+DEBUG=0
+
+# check for debug flag first
+if [ "$1" = "-d" ]; then
+    DEBUG=1
+    shift
+fi
+
+if [ $# -lt 2 ]; then
     echo "Usages: $0 <assignment number> <problem number>"
     exit 1
 fi
@@ -25,9 +33,16 @@ for f in  "$input_file" "$test_file" \
     fi
 done
 
+if [ $DEBUG -eq 1 ]; then
+    echo "[SCRIPT] Debug build"
+    CFLAGS="-std=c11 -g -O0 -Wall -Wextra -pipe"
+else
+    CFLAGS="-std=c11 -Wall -Wextra -pipe -O2"
+fi
+
 # compile and run
 echo "[SCRIPT] Compiling..."
-gcc -std=c11 -Wall -Wextra -pipe -o2 \
+gcc $CFLAGS \
     framework/driver.c \
     "${problem_dir}/problem.c" \
     "${problem_dir}/solver.c" \
@@ -40,5 +55,10 @@ gcc -std=c11 -Wall -Wextra -pipe -o2 \
 echo "[SCRIPT] Running tests..."
 echo
 
-./"$problem_binary" "$input_file" "$test_file"
-
+if [ $DEBUG -eq 1 ]; then
+    echo "[SCRIPT] debugger starting...."
+    GF="/home/myprograms/gf/gf2"
+    "$GF" ./"$problem_binary" "$input_file" "$test_file"
+else    
+    ./"$problem_binary" "$input_file" "$test_file"
+fi
