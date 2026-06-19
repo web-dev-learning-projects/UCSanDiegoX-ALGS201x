@@ -19,9 +19,10 @@ int main(int argc, char **argv){
     assert(argc == 3);
     assert(*argv != NULL);
 
-    const char *program = *argv++;
+    char *program = *argv++;
+    program = strstr(program, "AS-"); 
     int assignment_number, problem_number;
-    if(sscanf(program, "./tmp/bin/AS-%2d-PR-%2d", &assignment_number, &problem_number) != 2){
+    if(program == NULL || sscanf(program, "AS-%2d-PR-%2d", &assignment_number, &problem_number) != 2){
         log_with_color(RED, "ERROR: could not parse the program name correctly: %s\n", program);
         exit(-1);
     }
